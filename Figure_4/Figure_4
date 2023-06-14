@@ -1,0 +1,153 @@
+#Libraries
+library(readxl)
+library(ggplot2)
+library(vegan)
+library(dplyr)
+library(stats)
+library(ggbreak) 
+
+####################################
+setwd("Path/")
+##################################################
+##Figure 4A NMDS carbon substrate utilization
+##################################################
+#features as columns, samples as rows
+features = read_excel("Figure4_data.xlsx", sheet="NMDS", col_names = TRUE)
+colnames(features) <- c ( "ID", "mouse", "phase", "day")
+
+#make a metadata frame
+df <- features [,5:ncol(features)]
+df = as.data.frame(sapply(df, as.numeric))
+
+########
+##NMDS for untransformed
+########
+#Untransformed 
+set.seed(3)
+bray_dist = metaMDSdist(df, distance = "bray", 
+                        autotransform = FALSE, noshare = 0.2, trace = 1)
+
+NMDS_Bray <-metaMDS(df, distance = "bray",
+                    autotransform = FALSE, maxit=800, noshare = 0.2, trace = 1)
+#Untransformed stress=0.08
+
+data.scrs = as.data.frame(scores(NMDS_Bray, display="sites"))
+
+#add columns to data frame 
+data.scrs$phase = features$phase
+data.scrs$mouse = features$mouse
+data.scrs$ID = features$ID
+data.scrs$day = features$day
+data.scrs$day <- as.factor(data.scrs$day)
+
+#envfit genes driving NMDS
+NMDS.fit <- envfit(NMDS_Bray, df, permutations = 999)
+head(NMDS.fit)
+
+##ggplot with arrows
+#getting gene scores
+spp.scrs <- as.data.frame(scores(NMDS.fit, display = "vectors"))
+
+#number the genes
+gene_values <- data.frame (gene_name  = paste("gene", 1:406, sep="_"))
+
+spp.scrs <- cbind(spp.scrs, gene_values) #add species names to dataframe
+spp.scrs <- cbind(spp.scrs, pval = NMDS.fit$vectors$pvals) #add pvalues to dataframe so you can select species which are significant
+sig.spp.scrs <- subset(spp.scrs, pval<=0.001) #subset data to show species significant at 0.05
+
+#NMDS plot
+plot_getmm = ggplot(data.scrs, aes(x=NMDS1, y=NMDS2)) +
+  scale_color_manual(values=c('#fbb4b9','#7a0177','#c51b8a'))+
+  geom_point(size= 3, aes(color=phase))+
+  theme_classic()
+
+plot_getmm
+
+#loading arrows from 8 differentially expressed genes
+genesig = read_excel("Figure4_data.xlsx", sheet="envfit_NMDS", col_names = TRUE)
+colnames(genesig) <- c ("NMDS1",	"NMDS2",	"gene_name",	"pval",	"alt_id",	"filter","KEGG",	"description")
+
+spp.scrs <- cbind(spp.scrs, filter = genesig$filter) 
+final = spp.scrs %>%
+  filter(filter=="yes")
+
+#NMDS with loadings
+plot_getmm+
+  geom_segment(data = final, aes(x = 0, xend=NMDS1, y=0, yend=NMDS2), arrow = arrow(length = unit(0.25, "cm")), colour = "grey10", lwd=0.3) + #add vector arrows of significant species
+  ggrepel::geom_text_repel(data = final, aes(x=NMDS1, y=NMDS2, label = gene_name), cex = 3, direction = "both", segment.size = 0.1)
+
+##########Grouping by Phase SIGNIFICANT
+##anosim and mrpp
+anosim <- anosim(bray_dist, features$phase, permutations = 999)
+anosim
+#ANOSIM statistic R: 0.4363 
+#Significance: 0.002 
+
+mrpp_data = mrpp(bray_dist, features$phase)
+mrpp_data
+
+#Chance corrected within-group agreement A: 0.1493 
+#Based on observed delta 0.4983 and expected delta 0.5857
+#Significance of delta: 0.001
+
+##########Grouping by Mouse NOT SIGNIFICANT
+##anosim and mrpp
+anosim <- anosim(bray_dist, features$mouse, permutations = 999)
+anosim
+#ANOSIM statistic R: -0.1658 
+#Significance: 0.996 
+
+mrpp_data = mrpp(bray_dist, features$mouse)
+mrpp_data
+
+#Chance corrected within-group agreement A: -0.05787 
+#Based on observed delta 0.6196 and expected delta 0.5857 
+#Significance of delta: 0.997
+
+##################################################
+##Figure 4B Volcano plot and donut plot
+##################################################
+#Volcano plots EARLY vs PEAK
+#volcano plot data
+counts = read_excel("Figure4_data.xlsx",sheet="earlyvspeak")
+#temporarily removed point and readd to the plot
+counts2 = counts %>%
+  filter(ID!="5083_1")
+
+ggplot(counts2, aes(x=opposite_logfold, y=baseMean)) +
+  geom_point(aes(x=opposite_logfold, y=baseMean,color=category),size=3)+
+  scale_color_manual(values=c("#E2E1E0","#E2E1E0","#939393",'#4B2D9F','#A59CD3',"#000000",'#EE51B1',"#E3C515"))+
+  theme_classic()+scale_x_break(c(-7, -11.7))
+
+#Donut plot early vs peak
+df = read_excel("Figure4_data.xlsx",sheet="donut_earlyvspeak")
+
+ggplot(df, aes(x = phase, y = percentage, fill = category)) +
+  geom_col() +
+  scale_x_discrete(limits = c(" ", "early","peak"))+
+  scale_fill_manual(values=c('#4B2D9F',"#000000",'#A59CD3',"#939393",'#EE51B1',"#E3C515"))+
+  coord_polar("y") +
+  theme_void()
+
+##################################################
+##Figure 4C Volcano plot and donut plot
+##################################################
+#volcano plot data
+#PEAK vs LATE
+counts = read_excel("Figure4_data.xlsx",sheet="peakvslate")
+
+#volcano plot
+ggplot(counts, aes(x=log2FoldChange, y=baseMean)) +
+  geom_point(aes(x=log2FoldChange, y=baseMean,color=category),size=3)+
+  scale_color_manual(values=c("#E2E1E0","#E2E1E0","#939393",'#A59CD3',"#000000",'#EE51B1',"#E3C515"))+
+  theme_classic()+scale_y_break(c(4090, 312000))
+
+#donut plot data
+df2 = read_excel("Figure4_data.xlsx",sheet="donut_peakvspost")
+
+ggplot(df2, aes(x = phase, y = percentage, fill = category)) +
+  geom_col() +
+  scale_x_discrete(limits = c(" ", "peak","late"))+
+  scale_fill_manual(values=c("#000000",'#A59CD3',"#939393",'#EE51B1',"#E3C515"))+
+  coord_polar("y") +
+  theme_void()
