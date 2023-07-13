@@ -31,3 +31,20 @@ This folder contains:
 
 Supplemental_figure_1
 This folder contains:
+1. 16Sfeaturetable_Supp_figure1.R script- This script contains the R code for creating 16S filter tables, 16S relative abundance tables, alpha diversity metrics, and statistics featured in supplemental Figure 1.
+2. Supp_figure1.xlsx- The data for generating supplemental figure 1.
+
+Supplemental_Figure_2
+This folder contains:
+1. Supplemental_figure_2.R script- This script contains the R code for creating metabolite boxplots of supplemental Figure 2.
+2. Supplemental_figure2_data.xlsx- The data for generating supplemental figure 2.
+
+Supplemental_Figure_3
+This folder contains:
+1. Supplemental_Figure_3.R script- This script contains the R code for creating the carbon expression heatmap of supplemental Figure 3.
+2. Supplemental_Figure_3.xlsx- The data for generating supplemental figure 3.
+
+Supplemental_Figure_4_5
+This folder contains:
+1. Supplemental_Figure_4_5.R script- This script contains the R code for creating the differential expression lollipop plots between early and peak phases and peak and late phases of supplemental Figures 4 and 5.
+2. supplementalfig4_5.xlsx- The data for generating supplemental figures 4 and 5.
