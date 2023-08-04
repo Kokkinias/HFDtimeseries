@@ -8,7 +8,7 @@ library(RColorBrewer)
 ####################################
 setwd("/Path/")
 #Figure 5A data
-data <- read_xlsx("coregenes_upsetplot_041123.xlsx", sheet = "upset")
+data = read_excel("Figure5_data.xlsx", sheet="upset", col_names = TRUE)
 df = colnames(data)[6:8]
 
 #Upset plot
