@@ -39,11 +39,10 @@ This folder contains:
 6. peakvslate.txt -This is the htseq raw count for samples in the peak and late phases.
 7. peakvslate_metadata.txt- This is the metadata for the samples in the peak and late phases. We included information such as the round, the cage the mouse was from, the individual mouse, the day, and the infection phase. 
 8. peakvspost_results.csv - Raw results from DESeq2. Negative log2foldchange values are peak and positive log2foldchange values are late.
-9. DE_CORE_phasegenes.xlsx - This is a document that contains all diffferentially expressed genes grouped by phases and the appropriate DESeq2 statistics. It also includes genes that are considered CORE based on our definition provided in the paper. DRAM annotations are included in this file as well.
-10. GeTMM_normalization.R - This is the R script for normalizing gene expression counting by GeTMM using edge R. For more information, check out the GeTMM github.
-11. library_size.txt - This is the library size for all the samples.
-12. Salmonella_gene_length.txt - This is the gene length for all the genes in the Salmonella pangenome.
-13. getmm_gene.csv- These are the GeTMM normalized results. 
+9. GeTMM_normalization.R - This is the R script for normalizing gene expression counting by GeTMM using edge R. For more information, check out the GeTMM github.
+10. library_size.txt - This is the library size for all the samples.
+11. Salmonella_gene_length.txt - This is the gene length for all the genes in the Salmonella pangenome.
+12. getmm_gene.csv- These are the GeTMM normalized results. 
 
 
 Supplemental_figure_1
