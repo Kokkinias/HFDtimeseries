@@ -1,9 +1,19 @@
+#Libraries
+library(readxl)
+library(ggplot2)
+library(vegan)
+library(dplyr)
+library(stats)
+library(ggbreak) 
+
+####################################
+setwd("Path/")
 ##################################################
-##Figure 4B Volcano plot and donut plot
+##Figure 5A Volcano plot and donut plot
 ##################################################
 #Volcano plots EARLY vs PEAK
 #volcano plot data
-counts = read_excel("Figure4_data.xlsx",sheet="earlyvspeak")
+counts = read_excel("Figure5_data.xlsx",sheet="earlyvspeak")
 #temporarily removed point and readd to the plot
 counts2 = counts %>%
   filter(ID!="5083_1")
@@ -14,7 +24,7 @@ ggplot(counts2, aes(x=opposite_logfold, y=baseMean)) +
   theme_classic()+scale_x_break(c(-7, -11.7))
 
 #Donut plot early vs peak
-df = read_excel("Figure4_data.xlsx",sheet="donut_earlyvspeak")
+df = read_excel("Figure5_data.xlsx",sheet="donut_earlyvspeak")
 
 ggplot(df, aes(x = phase, y = percentage, fill = category)) +
   geom_col() +
@@ -24,11 +34,11 @@ ggplot(df, aes(x = phase, y = percentage, fill = category)) +
   theme_void()
 
 ##################################################
-##Figure 4C Volcano plot and donut plot
+##Figure 5B Volcano plot and donut plot
 ##################################################
 #volcano plot data
 #PEAK vs LATE
-counts = read_excel("Figure4_data.xlsx",sheet="peakvslate")
+counts = read_excel("Figure5_data.xlsx",sheet="peakvslate")
 
 #volcano plot
 ggplot(counts, aes(x=log2FoldChange, y=baseMean)) +
@@ -37,7 +47,7 @@ ggplot(counts, aes(x=log2FoldChange, y=baseMean)) +
   theme_classic()+scale_y_break(c(4090, 312000))
 
 #donut plot data
-df2 = read_excel("Figure4_data.xlsx",sheet="donut_peakvspost")
+df2 = read_excel("Figure5_data.xlsx",sheet="donut_peakvspost")
 
 ggplot(df2, aes(x = phase, y = percentage, fill = category)) +
   geom_col() +
