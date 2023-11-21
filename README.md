@@ -1,5 +1,5 @@
 # HFDtimeseries
-R scripts and data with descriptions for X paper. All raw data is deposited at the National Center for Biotechnology Information (NCBI) under accession number PRJNA348350. 
+R scripts and data with descriptions for X paper. All raw data is deposited at the National Center for Biotechnology Information (NCBI) under accession number PRJNA348350. Salmonella pangenome is available via Zenodo (10.5281/zenodo.10161717) 
 
 16SrRNA_data
 This folder contains taxonomy (16SrRNA_taxonomy.csv), a raw feature table (16S_featuretable_paper.csv), a filtered feature table, and a relative abundance table (10readsin5samples_16S_rel_abun.csv). As the file name suggests, counts were filtered to ASVs with at least 10 reads in at least 5 samples. 
