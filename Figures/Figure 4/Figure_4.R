@@ -80,7 +80,7 @@ mrpp_data
 ##################################################
 ##Figure 4B carbon heatmap
 ##################################################
-getmm = read_excel("carbon_heatmap_data_082123.xlsx", sheet="mean_getmm_relabun", col_names = TRUE)
+getmm = read_excel("carbon_heatmap_data_121323.xlsx", sheet="mean_getmm_relabun", col_names = TRUE)
 
 filtered <- getmm %>%
   filter(filter=="yes")
