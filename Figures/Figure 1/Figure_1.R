@@ -15,11 +15,6 @@ ggplot(data, aes(x=sample , y= abun, fill=treatment)) +
   geom_bar(stat= "identity", width =0.75) +
   theme_classic()
 
-#STATS
-one.way <- aov(abun~ treatment, data)
-summary(one.way)
-TukeyHSD(one.way)
-
 ####Lipocalin-2 Chow vs HFD
 data = read_excel("Figure1_data.xlsx", sheet="lipocalin", col_names = TRUE)
 
@@ -31,11 +26,6 @@ bp<- ggplot(data)+
   theme_classic()
 bp
 bp + scale_y_cut(breaks=c(500, 1000), which=c(1, 3), scales=c(3, 1))+expand_limits(y=0)
-
-#STATS
-one.way <- aov(ng_g_feces~ Diet, data)
-summary(one.way)
-TukeyHSD(one.way)
 
 ########Respiratory Electron Acceptor bar chart
 bar = read_excel("Figure1_data.xlsx",sheet="REA_bar")
