@@ -38,7 +38,7 @@ This folder contains:
 Figure_4
 This folder contains:
 1. Figure_4.R script- This is the R script for creating NMDS with loadings, statistics for the NMDS and the carbon expression heatmap of Figure 4.
-2. Figure4_data.xlsx and the carbon_heatmap_data_082123.xlsx - The data for generating figure 4.
+2. Figure4_data.xlsx and the carbon_heatmap_data_121323.xlsx - The data for generating figure 4.
 
 Figure_5
 This folder contains:
@@ -69,4 +69,4 @@ This folder contains:
 Supplemental Figure 5 & 6
 This folder contains:
 1. Supplemental_Figure_5_6.R script- This is the R script for creating the differential expression lollipop plots between early and peak phases and peak and late phases of supplemental Figures 5 and 6.
-2. supplementalfig5_6.xlsx- The data for generating supplemental figures 5 and 6.
+2. supplementalfig5_6_121323.xlsx- The data for generating supplemental figures 5 and 6.
