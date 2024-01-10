@@ -1,5 +1,5 @@
 # HFDtimeseries
-R scripts and data with descriptions for X paper. All raw data is deposited at the National Center for Biotechnology Information (NCBI) under accession number PRJNA348350. Salmonella pangenome is available via Zenodo (10.5281/zenodo.10161717) 
+R scripts and data with descriptions for X paper. All raw data is deposited at the National Center for Biotechnology Information (NCBI) under accession number PRJNA348350. Salmonella pangenome is available via Zenodo (10.5281/zenodo.10479610) 
 
 16SrRNA_data
 This folder contains taxonomy (16SrRNA_taxonomy.csv), a raw feature table (16S_featuretable_paper.csv), a filtered feature table, and a relative abundance table (10readsin5samples_16S_rel_abun.csv). As the file name suggests, counts were filtered to ASVs with at least 10 reads in at least 5 samples. 
@@ -70,3 +70,5 @@ Supplemental Figure 5 & 6
 This folder contains:
 1. Supplemental_Figure_5_6.R script- This is the R script for creating the differential expression lollipop plots between early and peak phases and peak and late phases of supplemental Figures 5 and 6.
 2. supplementalfig5_6_121323.xlsx- The data for generating supplemental figures 5 and 6.
+
+Data_processing.txt is a file that contains Qiime 2 commands for 16S processing and metaT mapping commands.
