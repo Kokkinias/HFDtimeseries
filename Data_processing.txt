@@ -1,0 +1,122 @@
+#Data_Processing 
+################################################################################
+#16S Qiime 2
+#path you want to work
+cd /path
+#source into Qiime 2
+source /opt/Miniconda2/miniconda2/bin/activate qiime2-2019.10
+
+#Import sequencing files
+mkdir reads
+cd /path/reads
+#Add forward, reverse and barcodes
+cp /path/barcodes.fastq.gz ./reads
+cp /path/seqname_r1.fastq.gz ./reads
+cp /path/seqname_r2.fastq.gz ./reads
+
+#Import reads into qiime 2
+cd /path
+qiime tools import --type EMPPairedEndSequences --input-path /path/reads/ --output-path emp-paired-end-sequences.qza
+
+#Demultiplex your sequences
+qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file  /path/16SRV_MappingFile_Feces.txt --m-barcodes-column BarcodeSequence --o-per-sample-sequences demultiplex_samples.qza --o-error-correction-details errorcorrectiondetails --p-rev-comp-mapping-barcodes
+
+#DADA2
+qiime dada2 denoise-paired --i-demultiplexed-seqs demultiplex_samples.qza --p-trim-left-f 0 --p-trunc-len-f 250 --p-trim-left-r 0 --p-trunc-len-r 250 --o-representative-sequences rep-seqs-dada2.250.qza --p-n-threads 10 --o-table table-dada2.250.qza --o-denoising-stats samples[DADA2Stats]
+
+#Make a feature table
+qiime feature-table summarize --i-table table-dada2.250.qza --o-visualization table-dada2.250.qzv --m-sample-metadata-file metadata.txt
+
+#Get taxonomy
+qiime feature-classifier classify-sklearn --i-classifier /path/classifier/silva-132-99-515-806-nb-classifier.qza --i-reads rep-seqs-dada2.250.qza --o-classification taxonomy.dada2.silva123.250.qza
+
+#Output taxonomy and feature table
+qiime tools export --input-path taxonomy.dada2.silva132.250.qza --output-dir feature_taxonomy_out
+
+qiime tools export –input-path table-dada2.250.qza --output-dir feature_table_out
+
+cd feature_table_out
+
+biom convert -i feature-table.biom -o feature-table.tsv --to-tsv --header-key taxonomy
+
+################################################################################
+#Mapping scripts
+#Generating pangenome for mapping
+#Path
+cd /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk
+
+#DRAM labeled long reads MAG
+cp /home/projects-wrighton/NIH_Salmonella/Salmonella/Minion_reads/Minion_reads_01_22/concatenated_01_11/flye_assembly_01_22_cat/polished_w_long_reads/DRAM_013122/bestlongreadsbin_genes.fna /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk
+
+#DRAM labeled short reads MAG
+cp /home/projects-wrighton/NIH_Salmonella/round5/salmonella_bestbin_DRAM_071321/bestshortreadsbin_genes.fna /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk
+
+#Concatenate gene delineated best MAGs (from DRAM)
+cat bestlongreadsbin_genes.fna bestshortreadsbin_genes.fna > sal_pangenome_genes.fna
+
+#MMSeqs to filer the genes at 99% sequence identity which generated our pangenome :)
+mmseqs easy-linclust sal_pangenome_genes.fna 99per_pansal_genes_clu tmp --min-seq-id 0.99 --alignment-mode 3 --max-seqs 100000 --threads 20
+
+#Path to working location
+cd /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk/pangenome_032222
+
+#Bowtie database
+bowtie2-build 99per_pansal_genes_clu_rep_seq.fasta contig_DB --large-index --threads 20
+
+#Bowtie mapping and sorting  
+bash bowtie_sort_032222.sh samples_all.txt
+
+#samples_all.txt file was a list of the sample names
+#Samples were trimmed and had adapters removed using bbduk
+#Below is an example of the scripts run for each sample
+#Bbduk
+#Sample 5_11_1_-1
+bbduk.sh -Xmx10G threads=20 overwrite=t in1=5_11_1_-1_R1.fastq.gz in2=5_11_1_-1_R2.fastq.gz ktrim=r k=23 mink=11 hdist=1 qtrim=rl ref=/opt/bbtools/bbmap/resources/adapters.fa out1=5_11_1_-1_R1_trimmed_bbduk.fastq.gz out2=5_11_1_-1_R2_trimmed_bbduk.fastq.gz
+
+#bowtie_sort_032222.sh was a script in the folder that was as follows:
+
+#!/bin/bash
+#$1 list of correct files
+for element in $(<$1)
+do
+# map
+bowtie2 -a -D 10 -R 2 -N 1 -L 22 -i S,0,2.50 -p 20 -x /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk/pangenome_032222/contig_sal -S "$element".sam --un "$element"_unaligned.sam -1 /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk/pangenome_032222/"$element"_R1_trimmed_bbduk.fastq.gz -2 /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk/pangenome_032222/"$element"_R2_trimmed_bbduk.fastq.gz
+
+#sam to bam
+samtools view -@ 20 -bS "$element".sam > "$element".bam
+
+#reformat and then name-sort bam file
+reformat.sh -Xmx100g idfilter=0.97 primaryonly=t pairedonly=f in="$element".bam out="$element"_97reformat.bam
+
+#name sort
+samtools sort -@ 20 -n -o "$element"_97reformat_namesort.bam "$element"_97reformat.bam
+
+done
+echo "all done!"
+exit 0
+
+#Use prodigal to make gff
+cd /home/projects-wrighton/NIH_Salmonella/round5/metaT_031621/bbduk/pangenome_032222
+
+prodigal -a 99per_pansal_genes_clu_rep_seq.faa -f gff -o 99per_pansal_genes_clu_rep_seq.gff -i 99per_pansal_genes_clu_rep_seq.fasta -p meta
+
+#Counting
+htseq-count -a 0 -t CDS -i ID --stranded=reverse -c htseq_sal_gene_counts_rev_032822.txt *namesort.bam 99per_pansal_genes_clu_rep_seq.gff
+
+#Run this python script to get tsv with gene length for GeTMM normalization
+import pandas as pd
+
+GFF_LOC = '99per_pansal_genes_clu_rep_seq.gff'
+OUTPUT_LOC = 'pan_sal_gene_lengths_032222.tsv'
+
+gff = pd.read_csv(GFF_LOC, sep='\t', comment='#', header=None)
+
+lines = list()
+for i, row in gff.iterrows():
+    id_ = row[8].split(';')[0].split('=')[-1]
+    length = row[4] - row[3]
+    lines.append((id_, length))
+
+with open(OUTPUT_LOC, 'w') as f:
+    f.write('%s\n' % '\n'.join(['\t'.join((i[0], str(i[1]))) for i in lines]))
+    
