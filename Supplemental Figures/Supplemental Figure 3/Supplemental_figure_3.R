@@ -23,6 +23,11 @@ ggplot(car)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
 
+#STATS
+anova <- aov(value~ treatment, car)
+summary(anova)
+TukeyHSD(anova)
+
 #Lactate
 lactate= data3 %>%
   filter(Metabolite=="Lactic acid")
@@ -32,6 +37,10 @@ ggplot(lactate)+
   geom_point(aes(x=treatment,y=value,color=treatment),size=3, alpha=0.6)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
+#STATS
+anova <- aov(value~ treatment, lactate)
+summary(anova)
+TukeyHSD(anova)
 
 #Succinate
 suc= data3 %>%
@@ -43,6 +52,11 @@ ggplot(suc)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
 
+#STATS
+anova <- aov(value~ treatment, suc)
+summary(anova)
+TukeyHSD(anova)
+
 #Xylose
 xyl= data3 %>%
   filter(Metabolite=="Xylose")
@@ -52,6 +66,10 @@ ggplot(xyl)+
   geom_point(aes(x=treatment,y=value,color=treatment),size=3, alpha=0.6)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
+#STATS
+anova <- aov(value~ treatment, xyl)
+summary(anova)
+TukeyHSD(anova)
 
 #Citrate
 cit= data3 %>%
@@ -62,7 +80,10 @@ ggplot(cit)+
   geom_point(aes(x=treatment,y=value,color=treatment),size=3, alpha=0.6)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
-
+#STATS
+anova <- aov(value~ treatment, cit)
+summary(anova)
+TukeyHSD(anova)
 
 #Malate
 mal= data3 %>%
@@ -73,6 +94,10 @@ ggplot(mal)+
   geom_point(aes(x=treatment,y=value,color=treatment),size=3, alpha=0.6)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
+#STATS
+anova <- aov(value~ treatment, mal)
+summary(anova)
+TukeyHSD(anova)
 
 #Fumarate
 fum= data3 %>%
@@ -83,6 +108,10 @@ ggplot(fum)+
   geom_point(aes(x=treatment,y=value,color=treatment),size=3, alpha=0.6)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
+#STATS
+anova <- aov(value~ treatment, fum)
+summary(anova)
+TukeyHSD(anova)
 
 #Aspartate
 asp= data3 %>%
@@ -93,6 +122,10 @@ ggplot(asp)+
   geom_point(aes(x=treatment,y=value,color=treatment),size=3, alpha=0.6)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()
+#STATS
+anova <- aov(value~ treatment, asp)
+summary(anova)
+TukeyHSD(anova)
 
 #SCFA boxplots
 data2 = read_excel("Supplemental_figure3_data.xlsx", sheet="SCFA", col_names = TRUE)
@@ -109,6 +142,10 @@ ggplot(ace)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()+ 
   coord_cartesian(ylim = c(0, 1.25))
+#STATS
+anova <- aov(value_umol_mg~ treatment, ace)
+summary(anova)
+TukeyHSD(anova)
 
 #Propionate
 pro= data2 %>%
@@ -120,6 +157,10 @@ ggplot(pro)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()+ 
   coord_cartesian(ylim = c(0, 1.25))
+#STATS
+anova <- aov(value_umol_mg~ treatment, pro)
+summary(anova)
+TukeyHSD(anova)
 
 #Butyrate
 but= data2 %>%
@@ -131,3 +172,8 @@ ggplot(but)+
   scale_color_manual(values=c('#67a9cf',"#99d8c9","#7a0177"))+
   theme_classic()+ 
   coord_cartesian(ylim = c(0, 1.25))
+
+#STATS
+anova <- aov(value_umol_mg~ treatment, but)
+summary(anova)
+TukeyHSD(anova)
