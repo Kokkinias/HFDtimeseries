@@ -53,22 +53,27 @@ This folder contains:
 
 Supplemental_Figure_2
 This folder contains:
-1. Supp_figure_2.R script- This is the R script for creating Salmonella relative abundance lineplot and the ASV barchart of supplemental Figure 2.  
-2. Supplemental_figure_2.xlsx- The data for generating supplemental figure 2.
+1. FigureS2.R script- This is the R script for creating Salmonella relative abundance lineplots between chow and HFD mice over time.  
+2. FigureS2.xlsx- The data for generating supplemental figure 2.
 
 Supplemental_Figure_3
 This folder contains:
-1. Supplemental_Figure_3.R script- This is the R script for creating metabolite boxplots of supplemental Figure 3.
-2. Supplemental_figure3_data.xlsx- The data for generating supplemental figure 3.
+1. FigureS3.R script- This is the R script for creating Salmonella relative abundance lineplot and the ASV barchart of supplemental Figure 3.  
+2. FigureS3.xlsx- The data for generating supplemental figure 3.
 
 Supplemental_Figure_4
 This folder contains:
-1. Supp_Figure_4.R script- This is the R script for creating the boxplots of a T3SS gene (invA) and a lactate dehydrogenase (lldD) of supplemental Figure 4.
-2. Supplemental_figure4_data.xlsx- The data for generating supplemental figure 4.
-   
-Supplemental Figure 5 & 6
+1. FigureS4.R script- This is the R script for creating metabolite boxplots of supplemental Figure 4.
+2. FigureS4.xlsx- The data for generating supplemental figure 4.
+
+Supplemental_Figure_5
 This folder contains:
-1. Supplemental_Figure_5_6.R script- This is the R script for creating the differential expression lollipop plots between early and peak phases and peak and late phases of supplemental Figures 5 and 6.
-2. supplementalfig5_6_121323.xlsx- The data for generating supplemental figures 5 and 6.
+1. FigureS5.R script- This is the R script for creating the boxplots of a T3SS gene (invA) and a lactate dehydrogenase (lldD) of supplemental Figure 5.
+2. FigureS5.xlsx- The data for generating supplemental figure 5.
+   
+Supplemental Figure 6 & 7
+This folder contains:
+1. FiguresS6and7.R script- This is the R script for creating the differential expression lollipop plots between early and peak phases and peak and late phases of supplemental Figures 6 and 7.
+2. Figures6and&.xlsx- The data for generating supplemental figures 6 and 7.
 
 Data_processing.txt is a file that contains Qiime 2 commands for 16S processing and metaT mapping commands.
